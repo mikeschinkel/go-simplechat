@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"koa-react-chat-app/server/src/routes"
 	"os"
 	"path/filepath"
+	"simple-chat-app/server/src/routes"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"

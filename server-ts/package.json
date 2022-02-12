@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Demo koa react typescript postgresql knex and socket-io.",
   "main": "index.js",
-  "repository": "https://github.com/seanpmaxwell/koa-react-chat-app",
+  "repository": "https://github.com/seanpmaxwell/simple-chat-app",
   "author": "sean maxwell",
   "license": "MIT",
   "private": false,

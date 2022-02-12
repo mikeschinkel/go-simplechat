@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"koa-react-chat-app/server/src/daos"
 	"net/http"
+	"simple-chat-app/server/src/daos"
 
 	"github.com/gin-gonic/gin"
 )

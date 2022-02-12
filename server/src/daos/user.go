@@ -1,7 +1,7 @@
 package daos
 
 import (
-	"koa-react-chat-app/server/src/models"
+	"simple-chat-app/server/src/models"
 )
 
 type UserDao struct{}

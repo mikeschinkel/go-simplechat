@@ -2,7 +2,7 @@ package services
 
 import (
 	"errors"
-	"koa-react-chat-app/server/src/daos"
+	"simple-chat-app/server/src/daos"
 )
 
 type AuthService struct{}

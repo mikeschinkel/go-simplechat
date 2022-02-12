@@ -1,4 +1,4 @@
-# koa-react-chat-app
+# simple-chat-app
 
 Demo koa react typescript postgresql knex and socket-io.
 
