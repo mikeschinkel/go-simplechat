@@ -2,7 +2,6 @@ package user
 
 import (
 	"net/http"
-	"simple-chat-app/server/src/models"
 	userService "simple-chat-app/server/src/services/user"
 
 	"github.com/gin-gonic/gin"
@@ -30,14 +29,14 @@ Add a new user.
 */
 func addOne(c *gin.Context) {
 	// Extra user from json
-	var newUser models.User
-	err := c.ShouldBindJSON(&newUser)
+	var req AddUserReq
+	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": err.Error()})
 		return
 	}
 	// Query db
-	err = userService.AddOne(&newUser)
+	err = userService.AddOne(req.Email, req.Name, req.Password)
 	if err != nil {
 		c.JSON(http.StatusCreated, gin.H{"status": err.Error()})
 		return

@@ -14,5 +14,5 @@ type UserCreds struct {
 	gorm.Model
 	Pwdhash string
 	UserID  int
-	User    User
+	User    User `gorm:"constraint:OnDelete:CASCADE;"`
 }

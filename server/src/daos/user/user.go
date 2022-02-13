@@ -34,11 +34,12 @@ func FetchAll() *[]models.User {
 /**
 Add a new user.
 */
-func AddOne(newUser *models.User) error {
+func AddOne(email string, name string) (*models.User, error) {
 	db := daos.GetDbConn()
+	newUser := models.User{Email: email, Name: name}
 	resp := db.Save(newUser)
 	if resp.Error != nil {
-		return resp.Error
+		return nil, resp.Error
 	}
-	return nil
+	return &newUser, nil
 }
