@@ -8,6 +8,6 @@ import (
 /**
 Fetch all users.
 */
-func FetchAll() *[3]models.User {
+func FetchAll() *[]models.User {
 	return userDao.FetchAll()
 }
