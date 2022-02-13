@@ -6,6 +6,10 @@ import (
 	userDao "simple-chat-app/server/src/daos/user"
 )
 
+const (
+	pwdVerificationFailedMsg = "password verification failed"
+)
+
 /**
 Verify user cre
 */
@@ -14,11 +18,14 @@ func VerifyUser(
 	password string,
 ) (string, error) {
 	// Search for the user
-	user := userDao.FindByEmail(email)
+	user, err := userDao.FindByEmail(email)
+	if err != nil {
+		return "", err
+	}
 	userCreds := authDao.GetUserCreds(user.ID)
 	// Check the password
 	if password != userCreds.Pwdhash {
-		return "", errors.New("password verification failed")
+		return "", errors.New(pwdVerificationFailedMsg)
 	}
 	jwt := "ima json web token"
 	return jwt, nil

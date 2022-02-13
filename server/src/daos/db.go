@@ -3,6 +3,7 @@ package daos
 import (
 	"fmt"
 	"os"
+	"simple-chat-app/server/src/models"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -28,13 +29,14 @@ func InitDbConn() {
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {
+		db.AutoMigrate(&models.User{}, &models.UserCreds{})
 		conn = db
 	}
 }
 
 /**
-
- */
+Get the database connection.
+*/
 func GetDbConn() *gorm.DB {
 	return conn
 }
