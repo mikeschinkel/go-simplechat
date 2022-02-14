@@ -28,13 +28,15 @@ func login(c *gin.Context) {
 		return
 	}
 	// Verify the user and get a jwt if they passed.
-	jwt, err := authService.VerifyUser(loginReq.Email, loginReq.Password)
+	jwtstr, err := authService.VerifyUserAndGetToken(loginReq.Email, loginReq.Password)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"login": err.Error()})
 		return
 	}
+	// Store the jwt in a cookie if passed
+
 	// Return json
-	c.JSON(http.StatusOK, gin.H{"jwt": jwt})
+	c.JSON(http.StatusOK, gin.H{"success": jwtstr})
 }
 
 /**
