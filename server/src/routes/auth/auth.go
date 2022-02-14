@@ -46,14 +46,9 @@ func login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"login": err.Error()})
 		return
 	}
-	httpOnly, err := strconv.ParseBool(os.Getenv("HTTP_ONLY"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"login": err.Error()})
-		return
-	}
 	// Store the jwt in a cookie if passed
 	c.SetCookie(os.Getenv("COOKIE_NAME"), jwtstr, maxAge, os.Getenv("COOKIE_PATH"),
-		os.Getenv("COOKIE_DOMAIN"), isSecure, httpOnly)
+		os.Getenv("COOKIE_DOMAIN"), isSecure, true)
 	// Return json
 	c.JSON(http.StatusOK, gin.H{"success": jwtstr})
 }
