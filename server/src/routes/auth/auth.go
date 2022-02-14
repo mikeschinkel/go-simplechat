@@ -2,7 +2,9 @@ package auth
 
 import (
 	"net/http"
+	"os"
 	authService "simple-chat-app/server/src/services/auth"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -34,7 +36,23 @@ func login(c *gin.Context) {
 		return
 	}
 	// Store the jwt in a cookie if passed
-
+	maxAge, err := strconv.Atoi(os.Getenv("COOKIE_EXP"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"login": err.Error()})
+		return
+	}
+	isSecure, err := strconv.ParseBool(os.Getenv("SECURE_COOKIE"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"login": err.Error()})
+		return
+	}
+	httpOnly, err := strconv.ParseBool(os.Getenv("HTTP_ONLY"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"login": err.Error()})
+		return
+	}
+	c.SetCookie(os.Getenv("COOKIE_NAME"), jwtstr, maxAge, os.Getenv("COOKIE_PATH"),
+		os.Getenv("COOKIE_DOMAIN"), isSecure, httpOnly)
 	// Return json
 	c.JSON(http.StatusOK, gin.H{"success": jwtstr})
 }
