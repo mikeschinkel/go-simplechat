@@ -1,9 +1,10 @@
 package auth
 
 import (
-	"errors"
 	authDao "simple-chat-app/server/src/daos/auth"
 	userDao "simple-chat-app/server/src/daos/user"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 const (
@@ -22,11 +23,17 @@ func VerifyUser(
 	if err != nil {
 		return "", err
 	}
-	userCreds := authDao.GetUserCreds(user.ID)
-	// Check the password
-	if password != userCreds.Pwdhash {
-		return "", errors.New(pwdVerificationFailedMsg)
+	// Fetch the pwd hash
+	pwdHash, err := authDao.GetPwdHash(user.ID)
+	if err != nil {
+		return "", err
 	}
+	// Compare the password to the hash
+	err = bcrypt.CompareHashAndPassword(pwdHash, []byte(password))
+	if err != nil {
+		return "", err
+	}
+	// Generate a jsonwebtoken if passed
 	jwt := "ima json web token"
 	return jwt, nil
 }

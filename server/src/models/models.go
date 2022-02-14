@@ -12,7 +12,7 @@ type User struct {
 
 type UserCreds struct {
 	gorm.Model
-	Pwdhash string
-	UserID  int
+	Pwdhash []byte
+	UserID  uint
 	User    User `gorm:"constraint:OnDelete:CASCADE;"`
 }

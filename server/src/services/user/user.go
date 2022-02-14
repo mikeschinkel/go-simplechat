@@ -24,17 +24,21 @@ func AddOne(email string, name string, password string) error {
 	if err != nil {
 		return err
 	}
-	// Ecrypt password and save it in user_creds table.
-	// Note bcrypt using byte[] not strings.
-	pwdArr := []byte(password)
-	hashedPassword, errr := bcrypt.GenerateFromPassword(pwdArr, bcrypt.DefaultCost)
+	// Ecrypt password and save it in user_creds table. Note bcrypt using byte[] not strings.
+	pwdHash, errr := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if errr != nil {
 		return err
 	}
-	pwdHash := string(hashedPassword)
 	err = authDao.SaveUserCreds(user.ID, pwdHash)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+/**
+Delete one user
+*/
+func DeleteOne(id uint) error {
+	return userDao.DeleteOne(id)
 }

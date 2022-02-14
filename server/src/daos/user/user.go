@@ -37,9 +37,21 @@ Add a new user.
 func AddOne(email string, name string) (*models.User, error) {
 	db := daos.GetDbConn()
 	newUser := models.User{Email: email, Name: name}
-	resp := db.Save(newUser)
+	resp := db.Save(&newUser)
 	if resp.Error != nil {
 		return nil, resp.Error
 	}
 	return &newUser, nil
+}
+
+/**
+Delete one user.
+*/
+func DeleteOne(id uint) error {
+	db := daos.GetDbConn()
+	resp := db.Where("id = ?", id).Delete(&models.User{})
+	if resp.Error != nil {
+		return resp.Error
+	}
+	return nil
 }

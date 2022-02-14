@@ -34,7 +34,7 @@ func login(c *gin.Context) {
 		return
 	}
 	// Return json
-	c.JSON(http.StatusUnauthorized, gin.H{"jwt": jwt})
+	c.JSON(http.StatusOK, gin.H{"jwt": jwt})
 }
 
 /**
