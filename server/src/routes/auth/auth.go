@@ -35,7 +35,7 @@ func login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"login": err.Error()})
 		return
 	}
-	// Store the jwt in a cookie if passed
+	// Setup environment variables (convert string to various types)
 	maxAge, err := strconv.Atoi(os.Getenv("COOKIE_EXP"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"login": err.Error()})
@@ -51,6 +51,7 @@ func login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"login": err.Error()})
 		return
 	}
+	// Store the jwt in a cookie if passed
 	c.SetCookie(os.Getenv("COOKIE_NAME"), jwtstr, maxAge, os.Getenv("COOKIE_PATH"),
 		os.Getenv("COOKIE_DOMAIN"), isSecure, httpOnly)
 	// Return json
