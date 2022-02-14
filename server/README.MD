@@ -16,5 +16,6 @@
     - If you don't sepecify an environment, `development` is default.
     - Environment names must match files under `./env`
 
+
 #### Notes
-- Do not initialize layers (routers, services, daos) (i.e `AuthDao`, `UserRouter`) in functions. Use dependency injection. See `wire.go`.
+- Constraints cannot be altered after a table is created. You need to drop the table and recreate the constraint.

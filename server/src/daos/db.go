@@ -29,9 +29,16 @@ func InitDbConn() {
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {
-		db.AutoMigrate(&models.User{}, &models.UserCreds{})
+		setupDb(db)
 		conn = db
 	}
+}
+
+/**
+Do database setup stuff.
+*/
+func setupDb(db *gorm.DB) {
+	db.AutoMigrate(&models.User{}, &models.UserCreds{})
 }
 
 /**

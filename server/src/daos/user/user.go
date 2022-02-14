@@ -49,7 +49,7 @@ Delete one user.
 */
 func DeleteOne(id uint) error {
 	db := daos.GetDbConn()
-	resp := db.Where("id = ?", id).Delete(&models.User{})
+	resp := db.Unscoped().Where("id = ?", id).Delete(&models.User{})
 	if resp.Error != nil {
 		return resp.Error
 	}

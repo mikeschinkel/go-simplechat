@@ -6,13 +6,13 @@ import (
 
 type User struct {
 	gorm.Model
-	Email string `json:"email" gorm:"unique"`
-	Name  string `json:"name"`
+	Email     string    `json:"email" gorm:"unique;size:255;not null"`
+	Name      string    `json:"name" gorm:"size:255;not null"`
+	UserCreds UserCreds `gorm:"constraint:OnDelete:CASCADE;"`
 }
 
 type UserCreds struct {
 	gorm.Model
-	Pwdhash []byte
+	Pwdhash []byte `gorm:"size:255;not null"`
 	UserID  uint
-	User    User `gorm:"constraint:OnDelete:CASCADE;"`
 }
