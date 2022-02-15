@@ -35,12 +35,13 @@ func login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"login": err.Error()})
 		return
 	}
-	// Setup environment variables (convert string to various types)
+	// Get the time to expire in seconds
 	maxAge, err := strconv.Atoi(os.Getenv("COOKIE_EXP"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"login": err.Error()})
 		return
 	}
+	// Get isSecure (https only)
 	isSecure, err := strconv.ParseBool(os.Getenv("SECURE_COOKIE"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"login": err.Error()})
@@ -50,7 +51,7 @@ func login(c *gin.Context) {
 	c.SetCookie(os.Getenv("COOKIE_NAME"), jwtstr, maxAge, os.Getenv("COOKIE_PATH"),
 		os.Getenv("COOKIE_DOMAIN"), isSecure, true)
 	// Return json
-	c.JSON(http.StatusOK, gin.H{"success": jwtstr})
+	c.JSON(http.StatusOK, gin.H{"success": true})
 }
 
 /**

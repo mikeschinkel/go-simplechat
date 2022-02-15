@@ -44,12 +44,11 @@ func VerifyUserAndGetToken(
 	}
 	// If passed, create a *jwt.Token with the claims
 	claims := JwtClaims{
-		&jwt.StandardClaims{
+		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Second * time.Duration(expSeconds)).Unix(),
 			Issuer:    "simple-chat-app/server",
 		},
-		"level1",
-		JwtUserParams{
+		JwtUserData{
 			id:    user.ID,
 			email: user.Email,
 			name:  user.Name,
