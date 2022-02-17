@@ -14,7 +14,7 @@
     - `full`: Build and run compiled code.
 - Append the environment name at the end (i.e. `sh run.sh start staging`):
     - If you don't sepecify an environment, `development` is default.
-    - Environment names must match files under `./env`
+    - Environment names must match file names under `./env`
 
 
 #### Notes

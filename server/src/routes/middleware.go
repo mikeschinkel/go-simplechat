@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"os"
 
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 )
@@ -13,6 +15,12 @@ import (
 Check the jwt-cookie is present.
 */
 func sessionMw(c *gin.Context) {
+	// Require login cookie for all /api routes except auth
+	urlstr := c.Request.URL.String()
+	if strings.HasPrefix(urlstr, "/api/auth") {
+		c.Next()
+		return
+	}
 	// Get the jwt string from the cookie
 	jwtstr, err := c.Cookie(os.Getenv("COOKIE_NAME"))
 	if err != nil {
@@ -34,7 +42,7 @@ func sessionMw(c *gin.Context) {
 	}
 
 	// pick up here
-	c.Set("Session", claims)
+	c.Set("session", claims)
 	// Next
 	c.Next()
 }
@@ -45,7 +53,7 @@ Check the algo and pass the jwt secret.
 func sessionMwHelper(token *jwt.Token) (interface{}, error) {
 	// Don't forget to validate the alg is what you expect:
 	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-		return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 	}
 	// jwt secret is a []byte containing your secret, e.g. []byte("my_secret_key")
 	secret := []byte(os.Getenv("JWT_SECRET"))
