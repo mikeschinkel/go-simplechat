@@ -12,6 +12,7 @@ Setup API Routes.
 */
 func SetupApiRouter(engine *gin.Engine) {
 	group := engine.Group("/api")
+	group.Use(sessionMw)
 	authRouter.Init(group)
 	userRouter.Init(group)
 }
