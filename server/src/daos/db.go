@@ -16,7 +16,7 @@ var (
 /**
 https://github.com/go-gorm/postgres
 */
-func init() {
+func InitConn() {
 	// Setup env vars
 	dbHost := os.Getenv("DATABASE_HOST")
 	dbPort := os.Getenv("DATABASE_PORT")

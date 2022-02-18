@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"simple-chat-app/server/src/daos"
 	"simple-chat-app/server/src/routes"
 
 	"github.com/gin-gonic/gin"
@@ -21,6 +22,7 @@ Main
 func main() {
 	env := os.Args[2]
 	loadEnv(env)
+	daos.InitConn()
 	startServer()
 }
 
@@ -34,12 +36,6 @@ func loadEnv(env string) {
 		fmt.Println(err.Error())
 	}
 }
-
-// Setup DI
-
-// Migrations
-
-// Gonna wanna start server after doing all the previoius stuff
 
 /**
 Start the Gin server.
