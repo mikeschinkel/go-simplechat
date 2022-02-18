@@ -42,6 +42,10 @@ func login(c *gin.Context) {
 		return
 	}
 	jwtstr, err := jwtUtil.Sign(&UserData{user.ID, user.Email, user.Name})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"login": err.Error()})
+		return
+	}
 	// Get the time to expire in seconds
 	maxAge, err := strconv.Atoi(os.Getenv("COOKIE_EXP"))
 	if err != nil {
@@ -60,9 +64,8 @@ func login(c *gin.Context) {
 }
 
 /**
-URL: "/api/auth/logout"
-
-Logout user by setting cookies maxAge = 0 and removing jwtstr
+- URL: "/api/auth/logout"
+- Logout user by setting cookies maxAge = 0 and removing jwtstr
 */
 func logout(c *gin.Context) {
 	// Erase cookie data
