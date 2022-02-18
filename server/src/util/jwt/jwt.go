@@ -13,16 +13,12 @@ import (
 const (
 	tokenValFailedErr   = "token validation failed"
 	extractingClaimsErr = "extracting claims failed"
+	signMethodErr       = "unexpected signing method: %v"
 )
 
 var (
 	secret = []byte(os.Getenv("JWT_SECRET"))
 )
-
-type JwtClaims struct {
-	jwt.StandardClaims
-	data interface{}
-}
 
 /**
 Get a jwt string with the data encoded.
@@ -56,12 +52,7 @@ Parse a jwt string and return the data
 */
 func Parse(jwtstr string) (*jwt.MapClaims, error) {
 	// Parse the the token, Don't forget to validate the alg is what you expect:
-	token, err := jwt.Parse(jwtstr, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
-		return secret, nil
-	})
+	token, err := jwt.Parse(jwtstr, parseHelper)
 	if err != nil {
 		return nil, err
 	}
@@ -75,4 +66,14 @@ func Parse(jwtstr string) (*jwt.MapClaims, error) {
 	}
 	// Return
 	return &claims, nil
+}
+
+/**
+Provide the secret and algorithm to the parse method.
+*/
+func parseHelper(token *jwt.Token) (interface{}, error) {
+	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+		return nil, fmt.Errorf(signMethodErr, token.Header["alg"])
+	}
+	return secret, nil
 }

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"simple-chat-app/server/src/daos"
 	"simple-chat-app/server/src/routes"
 
 	"github.com/gin-gonic/gin"
@@ -22,7 +21,6 @@ Main
 func main() {
 	env := os.Args[2]
 	loadEnv(env)
-	daos.InitDbConn()
 	startServer()
 }
 
