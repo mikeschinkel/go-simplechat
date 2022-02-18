@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"os"
 	authService "simple-chat-app/server/src/services/auth"
+	jwtUtil "simple-chat-app/server/src/util/jwt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -35,11 +36,12 @@ func login(c *gin.Context) {
 		return
 	}
 	// Verify the user and get a jwt if they passed.
-	jwtstr, err := authService.VerifyUserAndGetToken(loginReq.Email, loginReq.Password)
+	user, err := authService.VerifyUser(loginReq.Email, loginReq.Password)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"login": err.Error()})
 		return
 	}
+	jwtstr, err := jwtUtil.Sign(&UserData{user.ID, user.Email, user.Name})
 	// Get the time to expire in seconds
 	maxAge, err := strconv.Atoi(os.Getenv("COOKIE_EXP"))
 	if err != nil {

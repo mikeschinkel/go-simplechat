@@ -3,7 +3,7 @@ package routes
 import (
 	"net/http"
 	"os"
-	authService "simple-chat-app/server/src/services/auth"
+	authRoutes "simple-chat-app/server/src/routes/auth"
 	jwtUtil "simple-chat-app/server/src/util/jwt"
 	"strings"
 
@@ -33,7 +33,7 @@ func sessionMw(c *gin.Context) {
 		return
 	}
 	// Set Session Data
-	session := authService.UserData{
+	session := authRoutes.UserData{
 		ID:    (*claims)["ID"].(uint),
 		Email: (*claims)["Email"].(string),
 		Name:  (*claims)["Name"].(string),
