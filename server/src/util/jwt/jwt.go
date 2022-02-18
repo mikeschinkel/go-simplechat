@@ -10,6 +10,11 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
+const (
+	tokenValFailedErr   = "token validation failed"
+	extractingClaimsErr = "extracting claims failed"
+)
+
 var (
 	secret = []byte(os.Getenv("JWT_SECRET"))
 )
@@ -57,23 +62,17 @@ func Parse(jwtstr string) (*jwt.MapClaims, error) {
 		}
 		return secret, nil
 	})
-	if token.Valid {
-		return nil, errors.New("Token validation failed")
-	}
 	if err != nil {
 		return nil, err
+	}
+	if token.Valid {
+		return nil, errors.New(tokenValFailedErr)
 	}
 	// Check valid, extract data
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return nil, errors.New("Extracting claims failed")
+		return nil, errors.New(extractingClaimsErr)
 	}
-	// if ok && token.Valid {
-	// 	fmt.Println(claims["foo"], claims["nbf"])
-	// } else {
-	// 	fmt.Println(err)
-	// }
-
 	// Return
 	return &claims, nil
 }
