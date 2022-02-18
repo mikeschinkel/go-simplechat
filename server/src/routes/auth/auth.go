@@ -36,7 +36,7 @@ func login(c *gin.Context) {
 		return
 	}
 	// Verify the user and get a jwt if they passed.
-	user, err := authService.VerifyUser(loginReq.Email, loginReq.Password)
+	user, err := authService.VerifyAndFetchUser(loginReq.Email, loginReq.Password)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"login": err.Error()})
 		return

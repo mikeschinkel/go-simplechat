@@ -11,7 +11,7 @@ import (
 /**
 Verify user cre
 */
-func VerifyUser(email string, password string) (*models.User, error) {
+func VerifyAndFetchUser(email string, password string) (*models.User, error) {
 	// Search for the user
 	user, err := userDao.FindByEmail(email)
 	if err != nil {
