@@ -19,9 +19,9 @@ Add the auth-router (Group) to the gin-engine.
 */
 func Init(router *gin.RouterGroup) {
 	group := router.Group("/auth")
-	group.Use(authMiddleware)
 	group.PUT("/login", login)
 	group.GET("/logout", logout)
+	group.Use(authMiddleware)
 	group.GET("/session-data", getSessionData)
 }
 

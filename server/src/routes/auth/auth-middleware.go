@@ -32,12 +32,19 @@ func authMiddleware(c *gin.Context) {
 		return
 	}
 	// Set Session Data
-	session := SessionData{
+	session := GetSessionData(data)
+	c.Set(envUtil.SessionDataKey(), session)
+	// Return
+	c.Next()
+}
+
+/**
+The API middleware needs this too
+*/
+func GetSessionData(data *map[string]interface{}) *SessionData {
+	return &SessionData{
 		ID:    uint((*data)["id"].(float64)),
 		Email: (*data)["email"].(string),
 		Name:  (*data)["name"].(string),
 	}
-	c.Set(envUtil.SessionDataKey(), session)
-	// Return
-	c.Next()
 }

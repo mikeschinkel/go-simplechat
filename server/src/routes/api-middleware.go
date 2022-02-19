@@ -28,11 +28,7 @@ func apiMiddleware(c *gin.Context) {
 		return
 	}
 	// Set Session Data
-	session := authRoutes.SessionData{
-		ID:    uint((*data)["id"].(float64)),
-		Email: (*data)["email"].(string),
-		Name:  (*data)["name"].(string),
-	}
+	session := authRoutes.GetSessionData(data)
 	c.Set(envUtil.SessionDataKey(), session)
 	// Return
 	c.Next()
