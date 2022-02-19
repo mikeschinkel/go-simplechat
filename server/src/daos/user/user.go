@@ -1,7 +1,6 @@
 package user
 
 import (
-	"fmt"
 	"simple-chat-app/server/src/daos"
 	"simple-chat-app/server/src/models"
 )
@@ -22,13 +21,14 @@ func FindByEmail(email string) (*models.User, error) {
 /**
 Fetch all users.
 */
-func FetchAll() *[]models.User {
+func FetchAll() (*[]models.User, error) {
 	db := daos.GetDbConn()
 	var users []models.User
-	result := db.Find(&models.User{})
-	fmt.Println(result.Error)
-
-	return &users
+	resp := db.Find(&models.User{})
+	if resp.Error != nil {
+		return nil, resp.Error
+	}
+	return &users, nil
 }
 
 /**

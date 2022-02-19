@@ -9,19 +9,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const (
-	sessionDataKey = "session"
-)
-
 type LoginReq struct {
-	Email    string
-	Password string
-}
-
-type UserData struct {
-	ID    uint
-	Email string
-	Name  string
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 /**
@@ -29,6 +19,7 @@ Add the auth-router (Group) to the gin-engine.
 */
 func Init(router *gin.RouterGroup) {
 	group := router.Group("/auth")
+	group.Use(authMiddleware)
 	group.PUT("/login", login)
 	group.GET("/logout", logout)
 	group.GET("/session-data", getSessionData)
@@ -52,7 +43,8 @@ func login(c *gin.Context) {
 		return
 	}
 	// Get a jwt string if the user passed authentication
-	jwtstr, err := jwtUtil.Sign(&UserData{user.ID, user.Email, user.Name})
+	sessionData := SessionData{user.ID, user.Email, user.Name}
+	jwtstr, err := jwtUtil.Sign(&sessionData)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"login": err.Error()})
 		return
@@ -82,9 +74,9 @@ URL: "/api/auth/session"
 func getSessionData(c *gin.Context) {
 	// Check if the user is not logged in, if not that's okay,
 	// there just won't be any session data
-	session, exists := c.Get(sessionDataKey)
+	session, exists := c.Get(envUtil.SessionDataKey())
 	if !exists {
-		c.JSON(http.StatusOK, gin.H{"data": nil})
+		c.JSON(http.StatusOK, gin.H{"logged-in": false})
 		return
 	}
 	// Return the data if it's there

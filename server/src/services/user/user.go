@@ -11,7 +11,7 @@ import (
 /**
 Fetch all users.
 */
-func FetchAll() *[]models.User {
+func FetchAll() (*[]models.User, error) {
 	return userDao.FetchAll()
 }
 

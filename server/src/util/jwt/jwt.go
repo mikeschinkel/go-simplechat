@@ -1,3 +1,8 @@
+/**
+JWT Documentation: https://pkg.go.dev/github.com/golang-jwt/jwt
+Examples: https://github.com/dgrijalva/jwt-go/blob/master/example_test.go
+*/
+
 package jwt
 
 import (
@@ -18,7 +23,7 @@ const (
 
 type JwtClaims struct {
 	jwt.StandardClaims
-	data interface{}
+	Data interface{} `json:"data"`
 }
 
 /**
@@ -36,24 +41,24 @@ func Sign(data interface{}) (string, error) {
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	// Sign the token with the secret
-	tokenString, err := token.SignedString(envUtil.JetSecret())
+	tokenStr, err := token.SignedString(envUtil.JwtSecret())
 	if err != nil {
 		return "", err
 	}
 	// Return
-	return tokenString, err
+	return tokenStr, err
 }
 
 /**
-Parse a jwt string and return the data
+Parse a jwt string and return the data.
 */
-func Parse(jwtstr string) (*jwt.MapClaims, error) {
-	// Parse the the token, Don't forget to validate the alg is what you expect:
+func Parse(jwtstr string) (*map[string]interface{}, error) {
+	// Parse the the token, Don't forget to validate the alg is what you expect.
 	token, err := jwt.Parse(jwtstr, parseHelper)
 	if err != nil {
 		return nil, err
 	}
-	if token.Valid {
+	if !token.Valid {
 		return nil, errors.New(tokenValFailedErr)
 	}
 	// Check valid, extract data
@@ -61,8 +66,9 @@ func Parse(jwtstr string) (*jwt.MapClaims, error) {
 	if !ok {
 		return nil, errors.New(extractingClaimsErr)
 	}
+	data := claims["data"].(map[string]interface{})
 	// Return
-	return &claims, nil
+	return &data, nil
 }
 
 /**
@@ -72,5 +78,5 @@ func parseHelper(token *jwt.Token) (interface{}, error) {
 	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 		return nil, fmt.Errorf(signMethodErr, token.Header["alg"])
 	}
-	return envUtil.JetSecret(), nil
+	return envUtil.JwtSecret(), nil
 }

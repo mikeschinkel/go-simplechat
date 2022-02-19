@@ -23,6 +23,10 @@ var (
 	cookieExp    = 0
 )
 
+const (
+	sessionDataKey = "session-data"
+)
+
 /**
 Load env file and call functions that require parsing.
 */
@@ -60,7 +64,7 @@ func GetDbVals() (string, string, string, string, string) {
 /**
 Needed in jwtUtil to sign the token and the session middleware.
 */
-func JetSecret() []byte {
+func JwtSecret() []byte {
 	return jwtSecret
 }
 
@@ -83,4 +87,11 @@ To look up the cookie name in the middleware.
 */
 func CookieName() string {
 	return cookieName
+}
+
+/**
+Session data key to store in gin via middleware.
+*/
+func SessionDataKey() string {
+	return sessionDataKey
 }

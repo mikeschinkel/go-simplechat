@@ -32,7 +32,6 @@ Load environment variables from ".env" files.
 */
 func loadEnv() {
 	env := os.Args[1]
-	fmt.Println(os.Args)
 	path := filepath.Join(envFolderPath, env+".env")
 	err := godotenv.Load(path)
 	if err != nil {
