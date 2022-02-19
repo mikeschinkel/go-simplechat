@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"simple-chat-app/server/src/daos"
 	"simple-chat-app/server/src/routes"
+	envUtil "simple-chat-app/server/src/util/env"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -20,8 +21,8 @@ const (
 Main
 */
 func main() {
-	env := os.Args[2]
-	loadEnv(env)
+	loadEnv() // <-- Must be first
+	envUtil.Init()
 	daos.InitConn()
 	startServer()
 }
@@ -29,7 +30,8 @@ func main() {
 /**
 Load environment variables from ".env" files.
 */
-func loadEnv(env string) {
+func loadEnv() {
+	env := os.Args[1]
 	path := filepath.Join(envFolderPath, env+".env")
 	err := godotenv.Load(path)
 	if err != nil {

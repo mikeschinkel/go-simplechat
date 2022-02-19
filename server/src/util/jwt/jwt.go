@@ -26,7 +26,7 @@ Get a jwt string with the data encoded.
 */
 func Sign(data interface{}) (string, error) {
 	// If passed, create a *jwt.Token with the claims
-	exp := envUtil.CookieExp()
+	exp := envUtil.JwtExp()
 	claims := JwtClaims{
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Second * time.Duration(exp)).Unix(),
