@@ -2,10 +2,9 @@ package auth
 
 import (
 	"net/http"
-	"os"
 	authService "simple-chat-app/server/src/services/auth"
+	envUtil "simple-chat-app/server/src/util/env"
 	jwtUtil "simple-chat-app/server/src/util/jwt"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,6 +12,17 @@ import (
 const (
 	sessionDataKey = "session"
 )
+
+type LoginReq struct {
+	Email    string
+	Password string
+}
+
+type UserData struct {
+	ID    uint
+	Email string
+	Name  string
+}
 
 /**
 Add the auth-router (Group) to the gin-engine.
@@ -35,30 +45,21 @@ func login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"login": err.Error()})
 		return
 	}
-	// Verify the user and get a jwt if they passed.
+	// Verify and fetch the user
 	user, err := authService.VerifyAndFetchUser(loginReq.Email, loginReq.Password)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"login": err.Error()})
 		return
 	}
+	// Get a jwt string if the user passed authentication
 	jwtstr, err := jwtUtil.Sign(&UserData{user.ID, user.Email, user.Name})
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"login": err.Error()})
 		return
 	}
-	// Get the time to expire in seconds
-	maxAge, err := strconv.Atoi(os.Getenv("COOKIE_EXP"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"login": err.Error()})
-		return
-	}
-	// Store the jwt in a cookie if passed
-	name, path, domain, isSecure, err := getCookieVals()
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"login": err.Error()})
-		return
-	}
-	c.SetCookie(name, jwtstr, maxAge, path, domain, isSecure, true)
+	// Set the cookie
+	name, exp, path, domain, isSecure := envUtil.GetCookieVals()
+	c.SetCookie(name, jwtstr, exp, path, domain, isSecure, true)
 	// Return json
 	c.JSON(http.StatusOK, gin.H{"success": true})
 }
@@ -68,12 +69,8 @@ func login(c *gin.Context) {
 - Logout user by setting cookies maxAge = 0 and removing jwtstr
 */
 func logout(c *gin.Context) {
-	// Erase cookie data
-	name, path, domain, isSecure, err := getCookieVals()
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"logout": err.Error()})
-		return
-	}
+	// Set the cookie
+	name, _, path, domain, isSecure := envUtil.GetCookieVals()
 	c.SetCookie(name, "", 0, path, domain, isSecure, true)
 	// Return
 	c.JSON(http.StatusOK, gin.H{"success": true})
@@ -92,16 +89,4 @@ func getSessionData(c *gin.Context) {
 	}
 	// Return the data if it's there
 	c.JSON(http.StatusOK, gin.H{"data": session})
-}
-
-/***************************************************************************************
-                                      Shared
-***************************************************************************************/
-
-func getCookieVals() (string, string, string, bool, error) {
-	name := os.Getenv("COOKIE_DOMAIN")
-	path := os.Getenv("COOKIE_PATH")
-	domain := os.Getenv("COOKIE_DOMAIN")
-	isSecure, err := strconv.ParseBool(os.Getenv("SECURE_COOKIE"))
-	return name, path, domain, isSecure, err
 }

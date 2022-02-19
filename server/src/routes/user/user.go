@@ -9,6 +9,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type AddUserReq struct {
+	Email    string
+	Name     string
+	Password string
+}
+
 /**
 Setup the User route.
 */

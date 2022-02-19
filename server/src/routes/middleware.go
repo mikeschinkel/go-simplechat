@@ -2,8 +2,8 @@ package routes
 
 import (
 	"net/http"
-	"os"
 	authRoutes "simple-chat-app/server/src/routes/auth"
+	envUtil "simple-chat-app/server/src/util/env"
 	jwtUtil "simple-chat-app/server/src/util/jwt"
 	"strings"
 
@@ -21,7 +21,7 @@ func sessionMw(c *gin.Context) {
 		return
 	}
 	// Get the jwt string from the cookie
-	jwtstr, err := c.Cookie(os.Getenv("COOKIE_NAME"))
+	jwtstr, err := c.Cookie(envUtil.CookieName())
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"msg": "unauthorized"})
 		return

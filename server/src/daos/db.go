@@ -2,11 +2,15 @@ package daos
 
 import (
 	"fmt"
-	"os"
 	"simple-chat-app/server/src/models"
+	envUtil "simple-chat-app/server/src/util/env"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+)
+
+const (
+	dnsStr = "host=%s user=%s password=%s dbname=%s port=%s sslmode=disable"
 )
 
 var (
@@ -17,21 +21,20 @@ var (
 https://github.com/go-gorm/postgres
 */
 func InitConn() {
-	// Setup env vars
-	dbHost := os.Getenv("DATABASE_HOST")
-	dbPort := os.Getenv("DATABASE_PORT")
-	dbUser := os.Getenv("DATABASE_USER")
-	dbName := os.Getenv("DATABASE_NAME")
-	dbPwd := os.Getenv("DATABASE_PASSWORD")
+	// Don't setup if already connected
+	if conn != nil {
+		return
+	}
+	// Setup connection string
+	host, user, pwd, name, port := envUtil.GetDbVals()
+	dsn := fmt.Sprintf(dnsStr, host, user, pwd, name, port)
 	// Open connection
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
-		dbHost, dbUser, dbPwd, dbName, dbPort)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
-	// Setup GORM models
+	// Migrate GORM models
 	db.AutoMigrate(&models.User{}, &models.UserCreds{})
 	// Init connection
 	conn = db

@@ -3,9 +3,9 @@ package jwt
 import (
 	"errors"
 	"fmt"
-	"os"
-	"strconv"
 	"time"
+
+	envUtil "simple-chat-app/server/src/util/env"
 
 	"github.com/golang-jwt/jwt"
 )
@@ -16,30 +16,27 @@ const (
 	signMethodErr       = "unexpected signing method: %v"
 )
 
-var (
-	secret = []byte(os.Getenv("JWT_SECRET"))
-)
+type JwtClaims struct {
+	jwt.StandardClaims
+	data interface{}
+}
 
 /**
 Get a jwt string with the data encoded.
 */
 func Sign(data interface{}) (string, error) {
-	// If passed, get the cookie expiration time, use the same exp for jwt and cookie
-	expSeconds, err := strconv.Atoi(os.Getenv("COOKIE_EXP"))
-	if err != nil {
-		return "", err
-	}
 	// If passed, create a *jwt.Token with the claims
+	exp := envUtil.CookieExp()
 	claims := JwtClaims{
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Second * time.Duration(expSeconds)).Unix(),
+			ExpiresAt: time.Now().Add(time.Second * time.Duration(exp)).Unix(),
 			Issuer:    "simple-chat-app/server",
 		},
 		data,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	// Sign the token with the secret
-	tokenString, err := token.SignedString(secret)
+	tokenString, err := token.SignedString(envUtil.JetSecret())
 	if err != nil {
 		return "", err
 	}
@@ -69,11 +66,11 @@ func Parse(jwtstr string) (*jwt.MapClaims, error) {
 }
 
 /**
-Provide the secret and algorithm to the parse method.
+Provide the secret and algorithm to the jwt.Parse() method above.
 */
 func parseHelper(token *jwt.Token) (interface{}, error) {
 	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 		return nil, fmt.Errorf(signMethodErr, token.Header["alg"])
 	}
-	return secret, nil
+	return envUtil.JetSecret(), nil
 }
