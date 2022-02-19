@@ -13,7 +13,7 @@ fi
 if [ $1 = "start" ]; then
     go run ./src "$env"
 elif [ $1 = "hot" ]; then
-    gin --path ./src/ --port 8080 run ./src "$env"
+    gin --path ./src/ --port 8080 "$env"
 elif [ $1 = "build" ]; then
     go build -o dist ./src
 elif [ $1 = "startb" ]; then
