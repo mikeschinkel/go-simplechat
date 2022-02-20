@@ -23,10 +23,6 @@ var (
 	cookieExp    = 0
 )
 
-const (
-	sessionDataKey = "session-data"
-)
-
 /**
 Load env file and call functions that require parsing.
 */
@@ -87,11 +83,4 @@ To look up the cookie name in the middleware.
 */
 func CookieName() string {
 	return cookieName
-}
-
-/**
-Session data key to store in gin via middleware.
-*/
-func SessionDataKey() string {
-	return sessionDataKey
 }

@@ -48,7 +48,7 @@ func startServer() {
 		c.String(200, serverStartMsg)
 	})
 	// Add routers (Groups) to the gin-engine
-	routes.SetupApiRouter(engine)
+	routes.Init(engine)
 	// Start the server
 	engine.Run()
 }

@@ -3,16 +3,12 @@ package auth
 import (
 	"net/http"
 	authService "simple-chat-app/server/src/services/auth"
+	"simple-chat-app/server/src/shared/globals"
 	envUtil "simple-chat-app/server/src/util/env"
 	jwtUtil "simple-chat-app/server/src/util/jwt"
 
 	"github.com/gin-gonic/gin"
 )
-
-type LoginReq struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
 
 /**
 Add the auth-router (Group) to the gin-engine.
@@ -74,7 +70,7 @@ URL: "/api/auth/session"
 func getSessionData(c *gin.Context) {
 	// Check if the user is not logged in, if not that's okay,
 	// there just won't be any session data
-	session, exists := c.Get(envUtil.SessionDataKey())
+	session, exists := c.Get(globals.SessionDataKey())
 	if !exists {
 		c.JSON(http.StatusOK, gin.H{"logged-in": false})
 		return

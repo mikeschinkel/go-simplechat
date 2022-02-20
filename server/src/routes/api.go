@@ -10,7 +10,7 @@ import (
 /*
 Setup API Routes.
 */
-func SetupApiRouter(engine *gin.Engine) {
+func Init(engine *gin.Engine) {
 	group := engine.Group("/api")
 	authRoutes.Init(group)
 	group.Use(apiMiddleware)
