@@ -19,3 +19,7 @@
 
 #### Notes
 - Constraints cannot be altered after a table is created. You need to drop the table and recreate the constraint.
+
+
+#### Todo
+Also, rather than run.sh build the commands into the Go executable itself. Check out the Cobra package which is excellent for building CLIs.
