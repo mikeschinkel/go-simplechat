@@ -12,6 +12,7 @@
     - `build`: Compile.
     - `startb`: Run compiled code.
     - `full`: Build and run compiled code.
+    - `clean`: Clean up go.mod
 - Append the environment name at the end (i.e. `sh run.sh start staging`):
     - If you don't sepecify an environment, `development` is default.
     - Environment names must match file names under `./env`
@@ -23,4 +24,3 @@
 
 
 #### Todo
-Also, rather than run.sh build the commands into the Go executable itself. Check out the Cobra package which is excellent for building CLIs.
