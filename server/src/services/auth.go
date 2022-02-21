@@ -5,6 +5,7 @@ import (
 	"simple-chat-app/server/src/dal"
 	"simple-chat-app/server/src/models"
 	"simple-chat-app/server/src/util"
+	"time"
 )
 
 const (
@@ -25,9 +26,10 @@ func VerifyAndFetchUser(email string, password string) (*models.User, error) {
 	if err != nil {
 		return nil, err
 	}
-	// Compare the password to the hash
+	// Compare the password to the hash. Wait 500 milliseconds if it failed as a security measure.
 	passed := util.CheckPwd(pwdHash, password)
 	if !passed {
+		time.Sleep(time.Millisecond * 500)
 		return nil, errors.New(checkPwdFailed)
 	}
 	// Return
