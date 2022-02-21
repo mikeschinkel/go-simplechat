@@ -36,6 +36,18 @@ func AddUser(email string, name string, password string) error {
 }
 
 /**
+Update user's email and name.
+*/
+func UpdateUser(id uint, email string, name string) error {
+	user, err := daos.FindUserById(id)
+	if err != nil {
+		return err
+	}
+	daos.UpdateUser(user, email, name)
+	return nil
+}
+
+/**
 Delete one user
 */
 func DeleteUser(id uint) error {

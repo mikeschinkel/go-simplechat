@@ -15,20 +15,27 @@ type AddUserReq struct {
 	Password string `json:"password"`
 }
 
+type UpdateUserReq struct {
+	ID    uint   `json:"id"`
+	Email string `json:"email"`
+	Name  string `json:"name"`
+}
+
 /**
 Setup the User route.
 */
 func initUserRoutes(router *gin.RouterGroup) {
 	group := router.Group("/users")
-	group.GET("/", fetchAll)
-	group.POST("/", addOne)
-	group.DELETE("/:id", deleteOne)
+	group.GET("/", fetchAllUsers)
+	group.POST("/", addUser)
+	group.PUT("/", updateUser)
+	group.DELETE("/:id", deleteUser)
 }
 
 /**
 Fetch all users.
 */
-func fetchAll(c *gin.Context) {
+func fetchAllUsers(c *gin.Context) {
 	users, err := services.FetchAllUsers()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -40,7 +47,7 @@ func fetchAll(c *gin.Context) {
 /**
 Add a new user.
 */
-func addOne(c *gin.Context) {
+func addUser(c *gin.Context) {
 	// Extract user from json
 	var req AddUserReq
 	err := c.ShouldBindJSON(&req)
@@ -58,29 +65,29 @@ func addOne(c *gin.Context) {
 }
 
 /**
-Update one user.
+Update user's email and name.
 */
-// func updateOne(c *gin.Context) {
-// 	// Extract user from json
-// 	var req UpdateUserReq
-// 	err := c.ShouldBindJSON(&req)
-// 	if err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"status": err.Error()})
-// 		return
-// 	}
-// 	// Query db
-// 	err = userService.UpdateOne(req.Idreq.Email, req.Name, req.Password)
-// 	if err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"status": err.Error()})
-// 		return
-// 	}
-// 	c.JSON(http.StatusCreated, gin.H{"status": "success"})
-// }
+func updateUser(c *gin.Context) {
+	// Extract user from json
+	var req UpdateUserReq
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": err.Error()})
+		return
+	}
+	// Query db
+	err = services.UpdateUser(req.ID, req.Email, req.Name)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": err.Error()})
+		return
+	}
+	c.JSON(http.StatusCreated, gin.H{"status": "success"})
+}
 
 /**
 Delete one user.
 */
-func deleteOne(c *gin.Context) {
+func deleteUser(c *gin.Context) {
 	// Convert query string to unint
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {

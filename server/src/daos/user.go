@@ -5,6 +5,18 @@ import (
 )
 
 /**
+Find a user by their id.
+*/
+func FindUserById(id uint) (*models.User, error) {
+	user := models.User{}
+	resp := db.First(&user, id)
+	if resp.Error != nil {
+		return nil, resp.Error
+	}
+	return &user, nil
+}
+
+/**
 Find a user by email.
 */
 func FindUserByEmail(email string) (*models.User, error) {
@@ -21,7 +33,7 @@ Fetch all users.
 */
 func FetchAllUsers() (*[]models.User, error) {
 	var users []models.User
-	resp := db.Find(&models.User{})
+	resp := db.Find(&users)
 	if resp.Error != nil {
 		return nil, resp.Error
 	}
@@ -38,6 +50,13 @@ func AddUser(email string, name string) (*models.User, error) {
 		return nil, resp.Error
 	}
 	return &newUser, nil
+}
+
+/**
+Update user's email and name.
+*/
+func UpdateUser(user *models.User, email string, name string) {
+	db.Model(user).Updates(models.User{Email: email, Name: name})
 }
 
 /**
