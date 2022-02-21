@@ -53,7 +53,7 @@ func initEnv() {
 /**
 Look in daos/db.go for connection setup.
 */
-func GetDbVals() (string, string, string, string, string) {
+func DbParams() (string, string, string, string, string) {
 	return dbHost, dbUser, dbPwd, dbName, dbPort
 }
 
@@ -74,7 +74,7 @@ func JwtExp() int {
 /**
 Use to set the cookie in the auth router
 */
-func GetCookieVals() (string, int, string, string, bool) {
+func CookieParams() (string, int, string, string, bool) {
 	return cookieName, cookieExp, cookiePath, cookieDomain, secureCookie
 }
 
