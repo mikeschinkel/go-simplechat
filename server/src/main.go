@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"simple-chat-app/server/src/daos"
 	"simple-chat-app/server/src/routes"
-	envUtil "simple-chat-app/server/src/util/env"
+	"simple-chat-app/server/src/shared"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -22,8 +22,8 @@ Main()
 */
 func main() {
 	loadEnv() // <-- Must be first
-	envUtil.Init()
-	daos.InitConn()
+	shared.Init()
+	daos.Init()
 	startServer()
 }
 
