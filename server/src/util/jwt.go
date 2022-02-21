@@ -71,9 +71,7 @@ func ParseJwt(jwtstr string) (*map[string]interface{}, error) {
 	return &data, nil
 }
 
-/**
-Provide the secret and algorithm to the jwt.Parse() method above.
-*/
+// Provide the secret and algorithm to the jwt.Parse() method above.
 func parseHelper(token *jwt.Token) (interface{}, error) {
 	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 		return nil, fmt.Errorf(signMethodErr, token.Header["alg"])

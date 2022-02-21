@@ -18,8 +18,5 @@ Check password against hash.
 */
 func CheckPwd(pwdHash string, password string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(pwdHash), []byte(password))
-	if err != nil {
-		return false
-	}
-	return true
+	return err == nil
 }
