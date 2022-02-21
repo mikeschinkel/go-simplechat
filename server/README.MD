@@ -18,6 +18,7 @@
 
 
 #### Notes
+- folder `dal/` holds GORM queries. <i>dal</i> stands for <b>Data-Access-Layer</b>
 - Constraints cannot be altered after a table is created. You need to drop the table and recreate the constraint.
 
 

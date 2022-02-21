@@ -1,17 +1,16 @@
 package services
 
 import (
-	"simple-chat-app/server/src/daos"
+	"simple-chat-app/server/src/dal"
 	"simple-chat-app/server/src/models"
-
-	"golang.org/x/crypto/bcrypt"
+	"simple-chat-app/server/src/util"
 )
 
 /**
 Fetch all users.
 */
 func FetchAllUsers() (*[]models.User, error) {
-	return daos.FetchAllUsers()
+	return dal.FetchAllUsers()
 }
 
 /**
@@ -19,16 +18,16 @@ Add a new user object.
 */
 func AddUser(email string, name string, password string) error {
 	// Save the user
-	user, err := daos.AddUser(email, name)
+	user, err := dal.AddUser(email, name)
 	if err != nil {
 		return err
 	}
 	// Ecrypt password and save it in user_creds table. Note bcrypt using byte[] not strings.
-	pwdHash, errr := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if errr != nil {
+	pwdHash, err := util.HashPwd(password)
+	if err != nil {
 		return err
 	}
-	err = daos.SaveUserCreds(user.ID, pwdHash)
+	err = dal.SaveUserCreds(user.ID, pwdHash)
 	if err != nil {
 		return err
 	}
@@ -39,11 +38,11 @@ func AddUser(email string, name string, password string) error {
 Update user's email and name.
 */
 func UpdateUser(id uint, email string, name string) error {
-	user, err := daos.FindUserById(id)
+	user, err := dal.FindUserById(id)
 	if err != nil {
 		return err
 	}
-	daos.UpdateUser(user, email, name)
+	dal.UpdateUser(user, email, name)
 	return nil
 }
 
@@ -51,5 +50,5 @@ func UpdateUser(id uint, email string, name string) error {
 Delete one user
 */
 func DeleteUser(id uint) error {
-	return daos.DeleteUser(id)
+	return dal.DeleteUser(id)
 }

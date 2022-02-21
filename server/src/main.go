@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"simple-chat-app/server/src/daos"
+	"simple-chat-app/server/src/dal"
 	"simple-chat-app/server/src/routes"
 	"simple-chat-app/server/src/shared"
 
@@ -23,8 +23,8 @@ Main()
 func main() {
 	loadEnv() // <-- Must be first
 	shared.Init()
-	daos.Init()
-	startServer()
+	dal.Init()
+	startServer() // <-- Must be last
 }
 
 /**
