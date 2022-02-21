@@ -22,7 +22,7 @@ func AddUser(email string, name string, password string) error {
 	if err != nil {
 		return err
 	}
-	// Ecrypt password and save it in user_creds table. Note bcrypt using byte[] not strings.
+	// Ecrypt password and save it in user_creds table.
 	pwdHash, err := util.HashPwd(password)
 	if err != nil {
 		return err
