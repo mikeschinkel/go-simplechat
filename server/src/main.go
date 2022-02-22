@@ -33,9 +33,9 @@ func init() {
 Main()
 */
 func main() {
-	shared.Init()
+	shared.Init() // <--Must be first
 	dal.Init()
-	startServer() // <-- Must be last
+	startServer()
 }
 
 /**
