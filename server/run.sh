@@ -2,12 +2,7 @@
 
 
 ## Set the environment ##
-if [ -z "$2" ]; then
-    env="development"
-else
-    env=$2
-fi
-
+env=${2:-development}
 
 ## Run go ##
 if [ $1 = "start" ]; then
