@@ -15,21 +15,18 @@ func addRoutes(engine *gin.Engine) {
 	api := engine.Group("/api")
 
 	// et up the routes for users
-	group := api.Group("/users")
-	group.GET("/", handleGetAllUsersRequest)
-	group.POST("/", handleUserAddRequest)
-	group.PUT("/", handleUserUpdateRequest)
-	group.DELETE("/:id", handleUserDeleteRequest)
-
-	group.Use(APIMiddleware)
+	users := api.Group("/users")
+	users.GET("/", handleGetAllUsersRequest)
+	users.POST("/", handleUserAddRequest)
+	users.PUT("/", handleUserUpdateRequest)
+	users.DELETE("/:id", handleUserDeleteRequest)
+	users.Use(APIMiddleware)
 
 	// Add the auth-router (Group) to the gin-engine.
-	group = api.Group("/auth")
-	group.PUT("/handleLoginRequest", handleLoginRequest)
-	group.GET("/handleLogoutRequest", handleLogoutRequest)
-
-	group.Use(AuthMiddleware)
-
-	group.GET("/session-data", handleGetSessionRequest)
+	auth := api.Group("/auth")
+	auth.PUT("/handleLoginRequest", handleLoginRequest)
+	auth.GET("/handleLogoutRequest", handleLogoutRequest)
+	auth.GET("/session-data", handleGetSessionRequest)
+	auth.Use(AuthMiddleware)
 
 }
