@@ -17,19 +17,9 @@ const (
 )
 
 /**
-Main()
-*/
-func main() {
-	loadEnv() // <-- Must be first
-	shared.Init()
-	dal.Init()
-	startServer() // <-- Must be last
-}
-
-/**
 Load environment variables from ".env" files.
 */
-func loadEnv() {
+func init() {
 	env := os.Args[1]
 	cwd, _ := os.Getwd()
 	path := cwd + "/env/" + env + ".env"
@@ -37,6 +27,15 @@ func loadEnv() {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
+}
+
+/**
+Main()
+*/
+func main() {
+	shared.Init()
+	dal.Init()
+	startServer() // <-- Must be last
 }
 
 /**
