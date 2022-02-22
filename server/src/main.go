@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 	"simple-chat-app/server/src/dal"
 	"simple-chat-app/server/src/routes"
 	"simple-chat-app/server/src/shared"
@@ -32,7 +31,8 @@ Load environment variables from ".env" files.
 */
 func loadEnv() {
 	env := os.Args[1]
-	path := filepath.Join(envFolderPath, env+".env")
+	cwd, _ := os.Getwd()
+	path := cwd + "/env/" + env + ".env"
 	err := godotenv.Load(path)
 	if err != nil {
 		fmt.Println(err.Error())
