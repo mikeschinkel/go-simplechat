@@ -1,7 +1,0 @@
-	dbName := os.Getenv("DATABASE_NAME")
-	fmt.Println("horse")
-	fmt.Println(dbName)
-
-
-// Todo
-get DI working for daos
