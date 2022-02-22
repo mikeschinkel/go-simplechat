@@ -11,16 +11,17 @@ type Server struct {
 }
 
 func NewServer() *Server {
-	return &Server{
+	s := &Server{
 		Engine: gin.Default(),
 	}
+	// Add routers (Groups) to the gin-engine
+	addRoutes(s.Engine)
+
+	return s
 }
 
 // Start starts the Gin server.
 func (s *Server) Start() error {
-
-	// Add routers (Groups) to the gin-engine
-	addRoutes(s.Engine)
 
 	// Start the server
 	return s.Engine.Run()
